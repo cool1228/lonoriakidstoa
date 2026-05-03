@@ -1732,7 +1732,6 @@ do
 			local Outer = Library:Create('Frame', {
 				BackgroundColor3 = Color3.new(0, 0, 0);
 				BorderColor3 = Color3.new(0, 0, 0);
-				BorderSizePixel = 0;
 				Size = UDim2.new(1, -4, 0, 20);
 				ZIndex = 5;
 			});
@@ -1907,7 +1906,6 @@ do
 		local Outer = Library:Create('Frame', {
 			BackgroundColor3 = Color3.new(0, 0, 0);
 			BorderColor3 = Color3.new(0, 0, 0);
-			BorderSizePixel = 0;
 			Size = UDim2.new(1, -4, 0, 100);
 			ZIndex = 5;
 			Parent = self.Container;
@@ -3771,40 +3769,17 @@ function Library:CreateWindow(...)
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderColor3 = Library.AccentColor;
-		BorderMode = Enum.BorderMode.Inset;
-		Position = UDim2.new(0, 0, 0, 0); -- No more offset
-    Size = UDim2.new(1, 0, 1, 0);    -- Full size
-    ```
-
-**2. For Toggles:**
-Search for `ToggleInner`.
-
-*   **Change this:**
-    ```lua
-    Position = UDim2.new(0, 1, 0, 1);
-    Size = UDim2.new(1, -2, 1, -2);
-    ```
-*   **To this:**
-    ```lua
-    Position = UDim2.new(0, 0, 0, 0);
-    Size = UDim2.new(1, 0, 1, 0);
-    ```
-
-### Why this works
-By setting the `Position` to `0,0` and `Size` to `1,0` on the scale, the `Inner` frame perfectly covers the black `Outer` frame[cite: 1]. This effectively "hides" the black background that was acting as your outline[cite: 1].
-
----
-
-**One final thing to check:**
-If you want the **Inner** colored border (the accent color) to stay but the **Outer** black one to go, keep the `BorderMode` set to `Inset` on the `Inner` frame, but still change the size to `1,0` as shown above[cite: 1]. This keeps the UI looking sharp without that extra black "box" around every button.
+		BorderSizePixel = 0;
+		
+		Position = UDim2.new(0, 1, 0, 1);
+		Size = UDim2.new(1, -2, 1, -2);
 		ZIndex = 1;
 		Parent = Outer;
 	});
 
 	Library:AddToRegistry(Inner, {
 		BackgroundColor3 = 'MainColor';
-		BorderColor3 = 'AccentColor';
+		
 	});
 
 	local WindowLabel = Library:CreateLabel({
@@ -3898,15 +3873,24 @@ If you want the **Inner** colored border (the accent color) to stay but the **Ou
 
 		local TabButton = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
 			ZIndex = 1;
 			Parent = TabArea;
 		});
 
+		local TabButtonStroke = Library:Create('UIStroke', {
+			Color = Library.OutlineColor;
+			Thickness = 1;
+			LineJoinMode = Enum.LineJoinMode.Miter;
+			Parent = TabButton;
+		});
+
 		Library:AddToRegistry(TabButton, {
 			BackgroundColor3 = 'BackgroundColor';
-			BorderColor3 = 'OutlineColor';
+		});
+		Library:AddToRegistry(TabButtonStroke, {
+			Color = 'OutlineColor';
 		});
 
 		local TabButtonLabel = Library:CreateLabel({
