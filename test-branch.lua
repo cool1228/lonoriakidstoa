@@ -35,10 +35,10 @@ local Library = {
 	HudRegistry = {};
 
 	FontColor = Color3.fromRGB(255, 255, 255);
-	MainColor = Color3.fromRGB(20, 20, 20);
-	BackgroundColor = Color3.fromRGB(13, 13, 13);
+	MainColor = Color3.fromRGB(28, 28, 28);
+	BackgroundColor = Color3.fromRGB(20, 20, 20);
 	AccentColor = Color3.fromRGB(0, 85, 255);
-	OutlineColor = Color3.fromRGB(40, 40, 40);
+	OutlineColor = Color3.fromRGB(50, 50, 50);
 	RiskColor = Color3.fromRGB(255, 50, 50),
 
 	Black = Color3.new(0, 0, 0);
@@ -3385,7 +3385,8 @@ function Library:CreatePopout(Config)
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderSizePixel = 0;
+		BorderColor3 = Library.AccentColor;
+		BorderMode = Enum.BorderMode.Inset;
 		Position = UDim2.new(0, 1, 0, 1);
 		Size = UDim2.new(1, -2, 1, -2);
 		ZIndex = 1;
@@ -3394,6 +3395,7 @@ function Library:CreatePopout(Config)
 
 	Library:AddToRegistry(Inner, {
 		BackgroundColor3 = 'MainColor';
+		BorderColor3 = 'AccentColor';
 	});
 
 	local WindowLabel = Library:CreateLabel({
@@ -3614,7 +3616,8 @@ function Library:CreateWindow(...)
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderSizePixel = 0;
+		BorderColor3 = Library.AccentColor;
+		BorderMode = Enum.BorderMode.Inset;
 		Position = UDim2.new(0, 1, 0, 1);
 		Size = UDim2.new(1, -2, 1, -2);
 		ZIndex = 1;
@@ -3623,6 +3626,7 @@ function Library:CreateWindow(...)
 
 	Library:AddToRegistry(Inner, {
 		BackgroundColor3 = 'MainColor';
+		BorderColor3 = 'AccentColor';
 	});
 
 	local WindowLabel = Library:CreateLabel({
@@ -3673,12 +3677,12 @@ function Library:CreateWindow(...)
 	});
 
 	local TabArea = Library:Create('Frame', {
-    BackgroundTransparency = 1;
-    Position = UDim2.new(0, 8, 0, 8);
-    Size = UDim2.new(1, -16, 0, 18);
-    ZIndex = 1;
-    Parent = MainSectionInner;
-});
+		BackgroundTransparency = 1;
+		Position = UDim2.new(0, 8, 0, 8);
+		Size = UDim2.new(1, -16, 0, 21);
+		ZIndex = 1;
+		Parent = MainSectionInner;
+	});
 
 	local TabListLayout = Library:Create('UIListLayout', {
 		Padding = UDim.new(0, Config.TabPadding);
@@ -3688,13 +3692,14 @@ function Library:CreateWindow(...)
 	});
 
 	local TabContainer = Library:Create('Frame', {
-    BackgroundColor3 = Library.MainColor;
-    BorderColor3 = Library.OutlineColor;
-    Position = UDim2.new(0, 8, 0, 27);
-    Size = UDim2.new(1, -16, 1, -35);
-    ZIndex = 2;
-    Parent = MainSectionInner;
-});
+		BackgroundColor3 = Library.MainColor;
+		BorderColor3 = Library.OutlineColor;
+		Position = UDim2.new(0, 8, 0, 30);
+		Size = UDim2.new(1, -16, 1, -38);
+		ZIndex = 2;
+		Parent = MainSectionInner;
+	});
+
 	Library:AddToRegistry(TabContainer, {
 		BackgroundColor3 = 'MainColor';
 		BorderColor3 = 'OutlineColor';
@@ -3710,52 +3715,30 @@ function Library:CreateWindow(...)
 			Tabboxes = {};
 		};
 
-		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 13);
+		-- KEY CHANGE: use size 16 to match Library.Font default, no TabShadow wrapper
+		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
 
-		local TabShadow = Library:Create('Frame', {
-    BackgroundTransparency = 1;
-    BorderSizePixel = 0;
-    Size = UDim2.new(0, TabButtonWidth + 14, 1, 0);
-    ZIndex = 1;
-    Parent = TabArea;
-});
-
-local TabButton = Library:Create('Frame', {
-    BackgroundTransparency = 1;
-    BorderSizePixel = 0;
-    Position = UDim2.new(0, 0, 0, 0);
-    Size = UDim2.new(1, -1, 1, -1);
-    ZIndex = 2;
-    Parent = TabShadow;
-});
+		local TabButton = Library:Create('Frame', {
+			BackgroundColor3 = Library.BackgroundColor;
+			BorderColor3 = Library.OutlineColor;
+			Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
+			ZIndex = 1;
+			Parent = TabArea;
+		});
 
 		Library:AddToRegistry(TabButton, {
 			BackgroundColor3 = 'BackgroundColor';
-		});
-
-		local TabTopLine = Library:Create('Frame', {
-			BackgroundColor3 = Library.AccentColor;
-			BorderSizePixel = 0;
-			Position = UDim2.new(0, 0, 0, 0);
-			Size = UDim2.new(1, 0, 0, 2);
-			Visible = false;
-			ZIndex = 3;
-			Parent = TabButton;
-		});
-
-		Library:AddToRegistry(TabTopLine, {
-			BackgroundColor3 = 'AccentColor';
+			BorderColor3 = 'OutlineColor';
 		});
 
 		local TabButtonLabel = Library:CreateLabel({
-    Position = UDim2.new(0, 4, 0, 0);
-    Size = UDim2.new(1, -8, 1, 0);
-    Text = Name;
-    TextSize = 12;
-    Font = Library.Font;
-    ZIndex = 2;
-    Parent = TabButton;
-});
+			Position = UDim2.new(0, 0, 0, 0);
+			Size = UDim2.new(1, 0, 1, -1);
+			Text = Name;
+			ZIndex = 1;
+			Parent = TabButton;
+		});
+
 		local Blocker = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
 			BorderSizePixel = 0;
@@ -3836,7 +3819,6 @@ local TabButton = Library:Create('Frame', {
 			Blocker.BackgroundTransparency = 0;
 			TabButton.BackgroundColor3 = Library.MainColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
-			TabTopLine.Visible = true;
 			TabFrame.Visible = true;
 		end;
 
@@ -3844,7 +3826,6 @@ local TabButton = Library:Create('Frame', {
 			Blocker.BackgroundTransparency = 1;
 			TabButton.BackgroundColor3 = Library.BackgroundColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
-			TabTopLine.Visible = false;
 			TabFrame.Visible = false;
 		end;
 
@@ -3856,44 +3837,37 @@ local TabButton = Library:Create('Frame', {
 		function Tab:AddGroupbox(Info)
 			local Groupbox = {};
 
-			-- 3D inset border: dark shadow frame (bottom-right) + lighter highlight frame (top-left)
-			local BoxShadow = Library:Create('Frame', {
-				BackgroundColor3 = Color3.fromRGB(8, 8, 8);
-				BorderSizePixel = 0;
+			local BoxOuter = Library:Create('Frame', {
+				BackgroundColor3 = Library.BackgroundColor;
+				BorderColor3 = Library.OutlineColor;
+				BorderMode = Enum.BorderMode.Inset;
 				Size = UDim2.new(1, 0, 0, 507 + 2);
 				ZIndex = 2;
 				Parent = Info.Side == 1 and LeftSide or RightSide;
 			});
 
-			local BoxHighlight = Library:Create('Frame', {
-				BackgroundColor3 = Color3.fromRGB(60, 60, 60);
-				BorderSizePixel = 0;
-				Position = UDim2.new(0, 0, 0, 0);
-				Size = UDim2.new(1, -1, 1, -1);
-				ZIndex = 3;
-				Parent = BoxShadow;
+			Library:AddToRegistry(BoxOuter, {
+				BackgroundColor3 = 'BackgroundColor';
+				BorderColor3 = 'OutlineColor';
 			});
-
-			local BoxOuter = BoxShadow;
 
 			local BoxInner = Library:Create('Frame', {
 				BackgroundColor3 = Library.BackgroundColor;
-				BorderSizePixel = 0;
-				Position = UDim2.new(0, 1, 0, 1);
+				BorderColor3 = Color3.new(0, 0, 0);
 				Size = UDim2.new(1, -2, 1, -2);
+				Position = UDim2.new(0, 1, 0, 1);
 				ZIndex = 4;
-				Parent = BoxHighlight;
+				Parent = BoxOuter;
 			});
 
 			Library:AddToRegistry(BoxInner, {
 				BackgroundColor3 = 'BackgroundColor';
 			});
 
-			-- 1px accent line at the very top
 			local Highlight = Library:Create('Frame', {
 				BackgroundColor3 = Library.AccentColor;
 				BorderSizePixel = 0;
-				Size = UDim2.new(1, 0, 0, 1);
+				Size = UDim2.new(1, 0, 0, 2);
 				ZIndex = 5;
 				Parent = BoxInner;
 			});
@@ -3969,44 +3943,37 @@ local TabButton = Library:Create('Frame', {
 				Tabs = {};
 			};
 
-			-- 3D inset border: dark shadow (bottom-right), lighter highlight (top-left)
-			local BoxShadow = Library:Create('Frame', {
-				BackgroundColor3 = Color3.fromRGB(8, 8, 8);
-				BorderSizePixel = 0;
+			local BoxOuter = Library:Create('Frame', {
+				BackgroundColor3 = Library.BackgroundColor;
+				BorderColor3 = Library.OutlineColor;
+				BorderMode = Enum.BorderMode.Inset;
 				Size = UDim2.new(1, 0, 0, 0);
 				ZIndex = 2;
 				Parent = Info.Side == 1 and LeftSide or RightSide;
 			});
 
-			local BoxHighlight = Library:Create('Frame', {
-				BackgroundColor3 = Color3.fromRGB(60, 60, 60);
-				BorderSizePixel = 0;
-				Position = UDim2.new(0, 0, 0, 0);
-				Size = UDim2.new(1, -1, 1, -1);
-				ZIndex = 3;
-				Parent = BoxShadow;
+			Library:AddToRegistry(BoxOuter, {
+				BackgroundColor3 = 'BackgroundColor';
+				BorderColor3 = 'OutlineColor';
 			});
-
-			local BoxOuter = BoxShadow;
 
 			local BoxInner = Library:Create('Frame', {
 				BackgroundColor3 = Library.BackgroundColor;
-				BorderSizePixel = 0;
-				Position = UDim2.new(0, 1, 0, 1);
+				BorderColor3 = Color3.new(0, 0, 0);
 				Size = UDim2.new(1, -2, 1, -2);
+				Position = UDim2.new(0, 1, 0, 1);
 				ZIndex = 4;
-				Parent = BoxHighlight;
+				Parent = BoxOuter;
 			});
 
 			Library:AddToRegistry(BoxInner, {
 				BackgroundColor3 = 'BackgroundColor';
 			});
 
-			-- 1px accent line at top
 			local Highlight = Library:Create('Frame', {
 				BackgroundColor3 = Library.AccentColor;
 				BorderSizePixel = 0;
-				Size = UDim2.new(1, 0, 0, 1);
+				Size = UDim2.new(1, 0, 0, 2);
 				ZIndex = 10;
 				Parent = BoxInner;
 			});
@@ -4042,27 +4009,14 @@ local TabButton = Library:Create('Frame', {
 
 				local Button = Library:Create('Frame', {
 					BackgroundColor3 = Library.MainColor;
-					BorderSizePixel = 0;
+					BorderColor3 = Color3.new(0, 0, 0);
 					Size = UDim2.new(0.5, 0, 1, 0);
 					ZIndex = 6;
 					Parent = TabboxButtons;
 				});
 
-				local ButtonTopLine = Library:Create('Frame', {
-					BackgroundColor3 = Library.AccentColor;
-					BorderSizePixel = 0;
-					Position = UDim2.new(0, 0, 0, 0);
-					Size = UDim2.new(1, 0, 0, 2);
-					Visible = false;
-					ZIndex = 8;
-					Parent = Button;
-				});
-
 				Library:AddToRegistry(Button, {
 					BackgroundColor3 = 'MainColor';
-				});
-				Library:AddToRegistry(ButtonTopLine, {
-					BackgroundColor3 = 'AccentColor';
 				});
 
 				local ButtonLabel = Library:CreateLabel({
@@ -4110,7 +4064,6 @@ local TabButton = Library:Create('Frame', {
 
 					Container.Visible = true;
 					Block.Visible = true;
-					ButtonTopLine.Visible = true;
 
 					Button.BackgroundColor3 = Library.BackgroundColor;
 					Library.RegistryMap[Button].Properties.BackgroundColor3 = 'BackgroundColor';
@@ -4121,7 +4074,6 @@ local TabButton = Library:Create('Frame', {
 				function TabInstance:Hide()
 					Container.Visible = false;
 					Block.Visible = false;
-					ButtonTopLine.Visible = false;
 
 					Button.BackgroundColor3 = Library.MainColor;
 					Library.RegistryMap[Button].Properties.BackgroundColor3 = 'MainColor';
@@ -4195,7 +4147,7 @@ local TabButton = Library:Create('Frame', {
 		function Tab:Remove()
 			table.clear(Tab);
 			TabFrame:Destroy();
-			TabShadow:Destroy();
+			TabButton:Destroy();
 			Window.Tabs[Name] = nil;
 		end;
 
