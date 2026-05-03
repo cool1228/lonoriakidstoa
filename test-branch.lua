@@ -262,7 +262,7 @@ function Library:AddToolTip(InfoStr, HoverInstance)
 	local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 14);
 	local Tooltip = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor,
-		BorderColor3 = Library.OutlineColor,
+		BorderSizePixel = 0,
 
 		Size = UDim2.fromOffset(X + 5, Y + 4),
 		ZIndex = 100,
@@ -497,7 +497,7 @@ function Library:AddContextMenu(DisplayFrame, hitbox)
 
 	ContextMenu.Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.BackgroundColor;
-		BorderColor3 = Library.OutlineColor;
+		BorderSizePixel = 0;
 		BorderMode = Enum.BorderMode.Inset;
 		Size = UDim2.fromScale(1, 1);
 		ZIndex = 15;
@@ -695,7 +695,7 @@ do
 
 		local PickerFrameInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 16;
@@ -720,7 +720,7 @@ do
 
 		local SatVibMapInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 18;
@@ -789,7 +789,7 @@ do
 
 		local HueBoxInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 18,
@@ -848,7 +848,7 @@ do
 
 			TransparencyBoxInner = Library:Create('Frame', {
 				BackgroundColor3 = ColorPicker.Value;
-				BorderColor3 = Library.OutlineColor;
+				BorderSizePixel = 0;
 				BorderMode = Enum.BorderMode.Inset;
 				Size = UDim2.new(1, 0, 1, 0);
 				ZIndex = 19;
@@ -1194,7 +1194,7 @@ do
 
 		local PickInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 7;
@@ -1230,7 +1230,7 @@ do
 
 		local ModeSelectInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 15;
@@ -1644,7 +1644,7 @@ do
 
 			local Inner = Library:Create('Frame', {
 				BackgroundColor3 = Library.MainColor;
-				BorderColor3 = Library.OutlineColor;
+				BorderSizePixel = 0;
 				BorderMode = Enum.BorderMode.Inset;
 				Size = UDim2.new(1, 0, 1, 0);
 				ZIndex = 6;
@@ -1819,7 +1819,7 @@ do
 
 		local Inner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 6;
@@ -1888,7 +1888,7 @@ do
 
 		local DividerInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 6;
@@ -1945,7 +1945,7 @@ do
 
 		local TextBoxInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 6;
@@ -2136,7 +2136,7 @@ do
 
 		local ToggleInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 6;
@@ -2322,7 +2322,7 @@ do
 
 		local SliderInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 6;
@@ -2608,7 +2608,7 @@ do
 
 		local DropdownInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 6;
@@ -2684,7 +2684,7 @@ do
 
 		local ListInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			BorderMode = Enum.BorderMode.Inset;
 			BorderSizePixel = 0;
 			Size = UDim2.new(1, 0, 1, 0);
@@ -2775,7 +2775,7 @@ do
 
 				local Button = Library:Create('Frame', {
 					BackgroundColor3 = Library.MainColor;
-					BorderColor3 = Library.OutlineColor;
+					BorderSizePixel = 0;
 					BorderMode = Enum.BorderMode.Middle;
 					Size = UDim2.new(1, -1, 0, 20);
 					ZIndex = 23;
@@ -3205,7 +3205,7 @@ do
 
 	local KeybindInner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderColor3 = Library.OutlineColor;
+		BorderSizePixel = 0;
 		BorderMode = Enum.BorderMode.Inset;
 		Size = UDim2.new(1, 0, 1, 0);
 		ZIndex = 101;
@@ -3428,7 +3428,7 @@ function Library:CreatePopout(Config)
 
 	local MainSectionOuter = Library:Create('Frame', {
 		BackgroundColor3 = Library.BackgroundColor;
-		BorderColor3 = Library.OutlineColor;
+		BorderSizePixel = 0;
 		Position = UDim2.new(0, 8, 0, 25);
 		Size = UDim2.new(1, -16, 1, -33);
 		ZIndex = 1;
@@ -3456,7 +3456,7 @@ function Library:CreatePopout(Config)
 
 	local BackgroundFrame = Library:Create('Frame', {
 		BackgroundColor3 = Library.BackgroundColor;
-		BorderColor3 = Library.OutlineColor;
+		BorderSizePixel = 0;
 		Position = UDim2.new(0, 8, 0, 8);
 		Size = UDim2.new(1, -16, 1, -16);
 		ZIndex = 2;
@@ -3661,7 +3661,7 @@ function Library:CreateWindow(...)
 
 	local MainSectionOuter = Library:Create('Frame', {
 		BackgroundColor3 = Library.BackgroundColor;
-		BorderColor3 = Library.OutlineColor;
+		BorderSizePixel = 0;
 		Position = UDim2.new(0, 8, 0, 25);
 		Size = UDim2.new(1, -16, 1, -33);
 		ZIndex = 1;
@@ -3706,7 +3706,7 @@ function Library:CreateWindow(...)
 	-- CHANGE 2 cont: TabContainer pushed down slightly to create the gap/detached look
 	local TabContainer = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderColor3 = Library.OutlineColor;
+		BorderSizePixel = 0;
 		Position = UDim2.new(0, 8, 0, 30); -- kept same so there's a small gap between tabs and content
 		Size = UDim2.new(1, -16, 1, -38);
 		ZIndex = 2;
@@ -3733,7 +3733,7 @@ function Library:CreateWindow(...)
 
 		local TabButton = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
-			BorderColor3 = Library.OutlineColor;
+			BorderSizePixel = 0;
 			Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
 			ZIndex = 1;
 			Parent = TabArea;
@@ -3856,7 +3856,7 @@ function Library:CreateWindow(...)
 
 			local BoxOuter = Library:Create('Frame', {
 				BackgroundColor3 = Library.BackgroundColor;
-				BorderColor3 = Library.OutlineColor;
+				BorderSizePixel = 0;
 				BorderMode = Enum.BorderMode.Inset;
 				Size = UDim2.new(1, 0, 0, 507 + 2);
 				ZIndex = 2;
@@ -3962,7 +3962,7 @@ function Library:CreateWindow(...)
 
 			local BoxOuter = Library:Create('Frame', {
 				BackgroundColor3 = Library.BackgroundColor;
-				BorderColor3 = Library.OutlineColor;
+				BorderSizePixel = 0;
 				BorderMode = Enum.BorderMode.Inset;
 				Size = UDim2.new(1, 0, 0, 0);
 				ZIndex = 2;
