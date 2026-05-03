@@ -3627,6 +3627,7 @@ function Library:CreateWindow(...)
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
+		BorderSizePixel = 0;
 		BorderColor3 = Library.AccentColor;
 		BorderMode = Enum.BorderMode.Inset;
 		Position = UDim2.new(0, 1, 0, 1);
