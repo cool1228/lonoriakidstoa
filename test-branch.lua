@@ -2698,21 +2698,30 @@ do
 		end;
 
 		local DropdownOuter = Library:Create('Frame', {
-			BackgroundColor3 = Color3.new(0, 0, 0);
-			BorderColor3 = Color3.new(0, 0, 0);
+			BackgroundColor3 = Library.MainColor;
+			BorderSizePixel = 0;
 			Size = UDim2.new(1, -4, 0, 20);
 			ZIndex = 5;
 			Parent = Container;
 		});
 
+		local DropdownStroke = Library:Create('UIStroke', {
+			Color = Library.OutlineColor;
+			Thickness = 1;
+			LineJoinMode = Enum.LineJoinMode.Miter;
+			Parent = DropdownOuter;
+		});
+
 		Library:AddToRegistry(DropdownOuter, {
-			BorderColor3 = 'Black';
+			BackgroundColor3 = 'MainColor';
+		});
+		Library:AddToRegistry(DropdownStroke, {
+			Color = 'OutlineColor';
 		});
 
 		local DropdownInner = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
-			BorderColor3 = Library.OutlineColor;
-			BorderMode = Enum.BorderMode.Inset;
+			BorderSizePixel = 0;
 			Size = UDim2.new(1, 0, 1, 0);
 			ZIndex = 6;
 			Parent = DropdownOuter;
@@ -2720,31 +2729,22 @@ do
 
 		Library:AddToRegistry(DropdownInner, {
 			BackgroundColor3 = 'MainColor';
-			BorderColor3 = 'OutlineColor';
 		});
 
-		Library:Create('UIGradient', {
-			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
-			});
-			Rotation = 90;
-			Parent = DropdownInner;
-		});
-
-		local DropdownArrow = Library:Create('ImageLabel', {
-			AnchorPoint = Vector2.new(0, 0.5);
-			BackgroundTransparency = 1;
-			Position = UDim2.new(1, -16, 0.5, 0);
-			Size = UDim2.new(0, 12, 0, 12);
-			Image = 'http://www.roblox.com/asset/?id=6282522798';
+		local DropdownArrow = Library:CreateLabel({
+			AnchorPoint = Vector2.new(1, 0.5);
+			Position = UDim2.new(1, -6, 0.5, 0);
+			Size = UDim2.new(0, 10, 0, 14);
+			TextSize = 14;
+			Text = '>';
+			TextXAlignment = Enum.TextXAlignment.Center;
 			ZIndex = 8;
 			Parent = DropdownInner;
 		});
 
 		local ItemList = Library:CreateLabel({
-			Position = UDim2.new(0, 5, 0, 0);
-			Size = UDim2.new(1, -5, 1, 0);
+			Position = UDim2.new(0, 6, 0, 0);
+			Size = UDim2.new(1, -22, 1, 0);
 			TextSize = 14;
 			Text = '--';
 			TextXAlignment = Enum.TextXAlignment.Left;
@@ -2754,9 +2754,17 @@ do
 		});
 
 		Library:OnHighlight(DropdownOuter, DropdownOuter,
-			{ BorderColor3 = 'AccentColor' },
-			{ BorderColor3 = 'Black' }
+			{ },
+			{ }
 		);
+		DropdownOuter.MouseEnter:Connect(function()
+			DropdownStroke.Color = Library.AccentColor;
+			Library.RegistryMap[DropdownStroke].Properties.Color = 'AccentColor';
+		end);
+		DropdownOuter.MouseLeave:Connect(function()
+			DropdownStroke.Color = Library.OutlineColor;
+			Library.RegistryMap[DropdownStroke].Properties.Color = 'OutlineColor';
+		end);
 
 		if type(Info.Tooltip) == 'string' then
 			Library:AddToolTip(Info.Tooltip, DropdownOuter)
@@ -2878,17 +2886,24 @@ do
 
 				local Button = Library:Create('Frame', {
 					BackgroundColor3 = Library.MainColor;
-					BorderColor3 = Library.OutlineColor;
-					BorderMode = Enum.BorderMode.Middle;
-					Size = UDim2.new(1, -1, 0, 20);
+					BorderSizePixel = 0;
+					Size = UDim2.new(1, 0, 0, 20);
 					ZIndex = 23;
 					Active = true,
 					Parent = Scrolling;
 				});
 
+				Library:Create('Frame', {
+					BackgroundColor3 = Library.OutlineColor;
+					BorderSizePixel = 0;
+					Position = UDim2.new(0, 0, 1, -1);
+					Size = UDim2.new(1, 0, 0, 1);
+					ZIndex = 24;
+					Parent = Button;
+				});
+
 				Library:AddToRegistry(Button, {
 					BackgroundColor3 = 'MainColor';
-					BorderColor3 = 'OutlineColor';
 				});
 
 				local ButtonLabel = Library:CreateLabel({
@@ -2903,8 +2918,8 @@ do
 				});
 
 				Library:OnHighlight(Button, Button,
-					{ BorderColor3 = 'AccentColor', ZIndex = 24 },
-					{ BorderColor3 = 'OutlineColor', ZIndex = 23 }
+					{ BackgroundColor3 = Color3.fromRGB(40, 40, 40) },
+					{ BackgroundColor3 = Library.MainColor }
 				);
 
 				local Selected;
@@ -3769,8 +3784,8 @@ function Library:CreateWindow(...)
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderSizePixel = 0;
-		
+	BorderSizePixel = 0;
+
 		Position = UDim2.new(0, 1, 0, 1);
 		Size = UDim2.new(1, -2, 1, -2);
 		ZIndex = 1;
@@ -3779,7 +3794,7 @@ function Library:CreateWindow(...)
 
 	Library:AddToRegistry(Inner, {
 		BackgroundColor3 = 'MainColor';
-		
+
 	});
 
 	local WindowLabel = Library:CreateLabel({
@@ -3895,10 +3910,25 @@ function Library:CreateWindow(...)
 
 		local TabButtonLabel = Library:CreateLabel({
 			Position = UDim2.new(0, 0, 0, 0);
-			Size = UDim2.new(1, 0, 1, -1);
+			Size = UDim2.new(1, 0, 1, -2);
 			Text = Name;
-			ZIndex = 1;
+			ZIndex = 2;
 			Parent = TabButton;
+		});
+
+		-- Active accent line at bottom of tab
+		local TabAccentLine = Library:Create('Frame', {
+			BackgroundColor3 = Library.AccentColor;
+			BorderSizePixel = 0;
+			Position = UDim2.new(0, 0, 1, -2);
+			Size = UDim2.new(1, 0, 0, 2);
+			Visible = false;
+			ZIndex = 4;
+			Parent = TabButton;
+		});
+
+		Library:AddToRegistry(TabAccentLine, {
+			BackgroundColor3 = 'AccentColor';
 		});
 
 		local Blocker = Library:Create('Frame', {
@@ -3981,6 +4011,9 @@ function Library:CreateWindow(...)
 			Blocker.BackgroundTransparency = 0;
 			TabButton.BackgroundColor3 = Library.MainColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
+			TabButtonStroke.Color = Library.AccentColor;
+			Library.RegistryMap[TabButtonStroke].Properties.Color = 'AccentColor';
+			TabAccentLine.Visible = true;
 			TabFrame.Visible = true;
 		end;
 
@@ -3988,6 +4021,9 @@ function Library:CreateWindow(...)
 			Blocker.BackgroundTransparency = 1;
 			TabButton.BackgroundColor3 = Library.BackgroundColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
+			TabButtonStroke.Color = Library.OutlineColor;
+			Library.RegistryMap[TabButtonStroke].Properties.Color = 'OutlineColor';
+			TabAccentLine.Visible = false;
 			TabFrame.Visible = false;
 		end;
 
