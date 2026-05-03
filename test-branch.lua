@@ -49,11 +49,17 @@ local Library = {
 
 	NotificationStyle = {
 		Transparency = 0;
-		BarSide = "Left";
+		BarSide = "Left"; -- { "Left", "Right", "Bottom", "Top" };
 	};
 
 	KeypickerListVisible = true;
-	KeypickerListMode = "All";
+	KeypickerListMode = "All"; --[[
+		{
+			"Active",
+			"Toggled",
+			"All"
+		};
+	]]
 
 	Events = {};
 	Signals = {};
@@ -252,7 +258,6 @@ function Library:MakeDraggableOutline(Instance, Cutoff)
 		end;
 	end)
 end;
-
 function Library:AddToolTip(InfoStr, HoverInstance)
 	local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 14);
 	local Tooltip = Library:Create('Frame', {
@@ -3186,6 +3191,8 @@ do
 	Library.WatermarkText = WatermarkLabel;
 	Library:MakeDraggable(Library.Watermark);
 
+
+
 	local KeybindOuter = Library:Create('Frame', {
 		AnchorPoint = Vector2.new(0, 0.5);
 		BorderColor3 = Color3.new(0, 0, 0);
@@ -3291,6 +3298,7 @@ local NotificationStyle = Library.NotificationStyle;
 
 local _char, _max = string.char, math.max;
 
+
 local get_notification_colors = function()
 	local callback = NotificationStyle.OverrideColor;
 	if (callback) then
@@ -3350,6 +3358,7 @@ do
 
 	notification_clone = NotifyOuter;
 end;
+
 
 function Library:CreatePopout(Config)
 	if type(Config.Title) ~= 'string' then Config.Title = 'No title' end;
@@ -3514,6 +3523,7 @@ function Library:CreatePopout(Config)
 	return Window;
 end;
 
+
 local udim2_new, colorsequence_new, colorsequencekeypoint_new = UDim2.new, ColorSequence.new, ColorSequenceKeypoint.new;
 function Library:Notify(Text, Time)
 	local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 14);
@@ -3601,10 +3611,11 @@ function Library:CreateWindow(...)
 		Tabs = {};
 	};
 
+	-- CHANGE 1: Removed outer border - BorderSizePixel = 0 on Outer frame
 	local Outer = Library:Create('Frame', {
 		AnchorPoint = Config.AnchorPoint,
 		BackgroundColor3 = Color3.new(0, 0, 0);
-		BorderSizePixel = 0;
+		BorderSizePixel = 0; -- removed outer GUI border
 		Position = Config.Position,
 		Size = Config.Size,
 		Visible = false;
@@ -3676,9 +3687,10 @@ function Library:CreateWindow(...)
 		BackgroundColor3 = 'BackgroundColor';
 	});
 
+	-- CHANGE 2: Tab area moved up by 4px (from Y offset 8 to 4) so tabs appear detached/floating above the content box
 	local TabArea = Library:Create('Frame', {
 		BackgroundTransparency = 1;
-		Position = UDim2.new(0, 8, 0, 8);
+		Position = UDim2.new(0, 8, 0, 4); -- moved up 4px to detach tabs visually
 		Size = UDim2.new(1, -16, 0, 21);
 		ZIndex = 1;
 		Parent = MainSectionInner;
@@ -3691,14 +3703,16 @@ function Library:CreateWindow(...)
 		Parent = TabArea;
 	});
 
+	-- CHANGE 2 cont: TabContainer pushed down slightly to create the gap/detached look
 	local TabContainer = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
 		BorderColor3 = Library.OutlineColor;
-		Position = UDim2.new(0, 8, 0, 30);
+		Position = UDim2.new(0, 8, 0, 30); -- kept same so there's a small gap between tabs and content
 		Size = UDim2.new(1, -16, 1, -38);
 		ZIndex = 2;
 		Parent = MainSectionInner;
 	});
+
 
 	Library:AddToRegistry(TabContainer, {
 		BackgroundColor3 = 'MainColor';
@@ -3715,7 +3729,6 @@ function Library:CreateWindow(...)
 			Tabboxes = {};
 		};
 
-		-- KEY CHANGE: use size 16 to match Library.Font default, no TabShadow wrapper
 		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
 
 		local TabButton = Library:Create('Frame', {
@@ -3739,18 +3752,20 @@ function Library:CreateWindow(...)
 			Parent = TabButton;
 		});
 
-		local Blocker = Library:Create('Frame', {
-			BackgroundColor3 = Library.MainColor;
+		-- CHANGE 3: Instead of a Blocker fill under the active tab, use a thin accent-colored top line
+		-- The old Blocker covered the bottom border to merge tab into content - we replace with a top accent line
+		local ActiveLine = Library:Create('Frame', {
+			BackgroundColor3 = Library.AccentColor;
 			BorderSizePixel = 0;
-			Position = UDim2.new(0, 0, 1, 0);
-			Size = UDim2.new(1, 0, 0, 1);
-			BackgroundTransparency = 1;
+			Position = UDim2.new(0, 0, 0, 0); -- top of the tab
+			Size = UDim2.new(1, 0, 0, 2); -- 2px line across the top
+			BackgroundTransparency = 1; -- hidden by default (inactive)
 			ZIndex = 3;
 			Parent = TabButton;
 		});
 
-		Library:AddToRegistry(Blocker, {
-			BackgroundColor3 = 'MainColor';
+		Library:AddToRegistry(ActiveLine, {
+			BackgroundColor3 = 'AccentColor';
 		});
 
 		local TabFrame = Library:Create('Frame', {
@@ -3816,14 +3831,16 @@ function Library:CreateWindow(...)
 				Tab:HideTab();
 			end;
 
-			Blocker.BackgroundTransparency = 0;
-			TabButton.BackgroundColor3 = Library.MainColor;
-			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
+			-- CHANGE 3: Show the accent top line, keep tab background as normal (no fill merge)
+			ActiveLine.BackgroundTransparency = 0;
+			TabButton.BackgroundColor3 = Library.BackgroundColor;
+			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
 			TabFrame.Visible = true;
 		end;
 
 		function Tab:HideTab()
-			Blocker.BackgroundTransparency = 1;
+			-- CHANGE 3: Hide the accent top line on inactive tabs
+			ActiveLine.BackgroundTransparency = 1;
 			TabButton.BackgroundColor3 = Library.BackgroundColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
 			TabFrame.Visible = false;
@@ -4209,7 +4226,7 @@ function Library:CreateWindow(...)
 				CursorOutline.BackgroundTransparency = 1;
 				CursorOutline.ZIndex = 99;
 
-				Cursor.Size, CursorOutline.Size = UDim2.fromOffset(17, 17), UDim2.fromOffset(19, 19);
+				Cursor.Size, CursorOutline.Size = UDim2.fromOffset(17, 17),  UDim2.fromOffset(19, 19);
 				Cursor.Rotation, CursorOutline.Rotation = -45, -45;
 				while Toggled and ScreenGui.Parent do
 					InputService.MouseIconEnabled = false;
