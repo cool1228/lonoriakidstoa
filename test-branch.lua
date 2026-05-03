@@ -3773,8 +3773,31 @@ function Library:CreateWindow(...)
 		BackgroundColor3 = Library.MainColor;
 		BorderColor3 = Library.AccentColor;
 		BorderMode = Enum.BorderMode.Inset;
-		Position = UDim2.new(0, 1, 0, 1);
-		Size = UDim2.new(1, -2, 1, -2);
+		Position = UDim2.new(0, 0, 0, 0); -- No more offset
+    Size = UDim2.new(1, 0, 1, 0);    -- Full size
+    ```
+
+**2. For Toggles:**
+Search for `ToggleInner`.
+
+*   **Change this:**
+    ```lua
+    Position = UDim2.new(0, 1, 0, 1);
+    Size = UDim2.new(1, -2, 1, -2);
+    ```
+*   **To this:**
+    ```lua
+    Position = UDim2.new(0, 0, 0, 0);
+    Size = UDim2.new(1, 0, 1, 0);
+    ```
+
+### Why this works
+By setting the `Position` to `0,0` and `Size` to `1,0` on the scale, the `Inner` frame perfectly covers the black `Outer` frame[cite: 1]. This effectively "hides" the black background that was acting as your outline[cite: 1].
+
+---
+
+**One final thing to check:**
+If you want the **Inner** colored border (the accent color) to stay but the **Outer** black one to go, keep the `BorderMode` set to `Inset` on the `Inner` frame, but still change the size to `1,0` as shown above[cite: 1]. This keeps the UI looking sharp without that extra black "box" around every button.
 		ZIndex = 1;
 		Parent = Outer;
 	});
