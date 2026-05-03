@@ -3713,21 +3713,21 @@ function Library:CreateWindow(...)
 		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 13);
 
 		local TabShadow = Library:Create('Frame', {
-    BackgroundColor3 = Color3.fromRGB(0, 0, 0);
+    BackgroundTransparency = 1;
     BorderSizePixel = 0;
     Size = UDim2.new(0, TabButtonWidth + 14, 1, 0);
     ZIndex = 1;
     Parent = TabArea;
 });
 
-		local TabButton = Library:Create('Frame', {
-			BackgroundColor3 = Library.BackgroundColor;
-			BorderSizePixel = 0;
-			Position = UDim2.new(0, 0, 0, 0);
-			Size = UDim2.new(1, -1, 1, -1);
-			ZIndex = 2;
-			Parent = TabShadow;
-		});
+local TabButton = Library:Create('Frame', {
+    BackgroundTransparency = 1;
+    BorderSizePixel = 0;
+    Position = UDim2.new(0, 0, 0, 0);
+    Size = UDim2.new(1, -1, 1, -1);
+    ZIndex = 2;
+    Parent = TabShadow;
+});
 
 		Library:AddToRegistry(TabButton, {
 			BackgroundColor3 = 'BackgroundColor';
