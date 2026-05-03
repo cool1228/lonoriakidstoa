@@ -3711,15 +3711,15 @@ function Library:CreateWindow(...)
 			Tabboxes = {};
 		};
 
-		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
+		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 13);
 
 		local TabButton = Library:Create('Frame', {
-			BackgroundColor3 = Library.BackgroundColor;
-			BorderSizePixel = 0;
-			Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
-			ZIndex = 1;
-			Parent = TabArea;
-		});
+    BackgroundColor3 = Library.BackgroundColor;
+    BorderSizePixel = 0;
+    Size = UDim2.new(0, TabButtonWidth + 4, 1, 0);
+    ZIndex = 1;
+    Parent = TabArea;
+});
 
 		Library:AddToRegistry(TabButton, {
 			BackgroundColor3 = 'BackgroundColor';
@@ -3740,12 +3740,13 @@ function Library:CreateWindow(...)
 		});
 
 		local TabButtonLabel = Library:CreateLabel({
-			Position = UDim2.new(0, 0, 0, 0);
-			Size = UDim2.new(1, 0, 1, 0);
-			Text = Name;
-			ZIndex = 2;
-			Parent = TabButton;
-		});
+    Position = UDim2.new(0, 0, 0, 0);
+    Size = UDim2.new(1, 0, 1, 0);
+    Text = Name;
+    TextSize = 13;  -- add this line
+    ZIndex = 2;
+    Parent = TabButton;
+});
 
 		local Blocker = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
