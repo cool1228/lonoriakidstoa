@@ -2123,12 +2123,13 @@ do
 		local Container = Groupbox.Container;
 
 		local ToggleOuter = Library:Create('Frame', {
-			BackgroundColor3 = Color3.new(0, 0, 0);
-			BorderColor3 = Color3.new(0, 0, 0);
-			Size = UDim2.new(0, 13, 0, 13);
-			ZIndex = 5;
-			Parent = Container;
-		});
+    BackgroundColor3 = Color3.new(0, 0, 0);
+    BorderColor3 = Color3.new(0, 0, 0);
+    BorderSizePixel = 0; -- <--- REMOVES THE OUTLINE
+    Size = UDim2.new(0, 13, 0, 13);
+    ZIndex = 5;
+    Parent = Container;
+});
 
 		Library:AddToRegistry(ToggleOuter, {
 			BorderColor3 = 'Black';
