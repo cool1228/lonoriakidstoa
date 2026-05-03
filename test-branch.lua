@@ -3879,27 +3879,27 @@ function Library:CreateWindow(...)
 			BackgroundColor3 = 'BackgroundColor';
 		});
 
+		-- Top accent line (shown when tab is active)
+		local TabTopLine = Library:Create('Frame', {
+			BackgroundColor3 = Library.AccentColor;
+			BorderSizePixel = 0;
+			Position = UDim2.new(0, 0, 0, 0);
+			Size = UDim2.new(1, 0, 0, 2);
+			Visible = false;
+			ZIndex = 3;
+			Parent = TabButton;
+		});
+
+		Library:AddToRegistry(TabTopLine, {
+			BackgroundColor3 = 'AccentColor';
+		});
+
 		local TabButtonLabel = Library:CreateLabel({
 			Position = UDim2.new(0, 0, 0, 0);
-			Size = UDim2.new(1, 0, 1, -2);
+			Size = UDim2.new(1, 0, 1, 0);
 			Text = Name;
 			ZIndex = 2;
 			Parent = TabButton;
-		});
-
-		-- Accent underline: only shown on the active tab
-		local TabUnderline = Library:Create('Frame', {
-			BackgroundColor3 = Library.AccentColor;
-			BorderSizePixel = 0;
-			Position = UDim2.new(0, 0, 1, -2);
-			Size = UDim2.new(1, 0, 0, 2);
-			Visible = false;
-			ZIndex = 4;
-			Parent = TabButton;
-		});
-
-		Library:AddToRegistry(TabUnderline, {
-			BackgroundColor3 = 'AccentColor';
 		});
 
 		local Blocker = Library:Create('Frame', {
@@ -3982,7 +3982,7 @@ function Library:CreateWindow(...)
 			Blocker.BackgroundTransparency = 0;
 			TabButton.BackgroundColor3 = Library.MainColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
-			TabUnderline.Visible = true;
+			TabTopLine.Visible = true;
 			TabFrame.Visible = true;
 		end;
 
@@ -3990,7 +3990,7 @@ function Library:CreateWindow(...)
 			Blocker.BackgroundTransparency = 1;
 			TabButton.BackgroundColor3 = Library.BackgroundColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
-			TabUnderline.Visible = false;
+			TabTopLine.Visible = false;
 			TabFrame.Visible = false;
 		end;
 
@@ -4002,35 +4002,46 @@ function Library:CreateWindow(...)
 		function Tab:AddGroupbox(Info)
 			local Groupbox = {};
 
-			local BoxOuter = Library:Create('Frame', {
-				BackgroundColor3 = Library.BackgroundColor;
+			-- 3D inset: dark = shadow (bottom-right), light = highlight (top-left)
+			local BoxShadow = Library:Create('Frame', {
+				BackgroundColor3 = Color3.fromRGB(8, 8, 8);
 				BorderSizePixel = 0;
 				Size = UDim2.new(1, 0, 0, 507 + 2);
 				ZIndex = 2;
 				Parent = Info.Side == 1 and LeftSide or RightSide;
 			});
 
-			Library:Create('UIStroke', {
-				Color = Library.OutlineColor;
-				Thickness = 1;
-				LineJoinMode = Enum.LineJoinMode.Miter;
-				Parent = BoxOuter;
+			local BoxHighlight = Library:Create('Frame', {
+				BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+				BorderSizePixel = 0;
+				Position = UDim2.new(0, 0, 0, 0);
+				Size = UDim2.new(1, -1, 1, -1);
+				ZIndex = 3;
+				Parent = BoxShadow;
 			});
 
-			Library:AddToRegistry(BoxOuter, {
+			local BoxOuter = BoxShadow; -- alias for Resize/Remove
+
+			local BoxInner = Library:Create('Frame', {
+				BackgroundColor3 = Library.BackgroundColor;
+				BorderSizePixel = 0;
+				Position = UDim2.new(0, 1, 0, 1);
+				Size = UDim2.new(1, -2, 1, -2);
+				ZIndex = 4;
+				Parent = BoxHighlight;
+			});
+
+			Library:AddToRegistry(BoxInner, {
 				BackgroundColor3 = 'BackgroundColor';
 			});
 
-			-- BoxInner fills BoxOuter completely (no offset needed with UIStroke)
-			local BoxInner = BoxOuter;
-
-			-- 1px accent line at top only
+			-- 1px accent line at top
 			local Highlight = Library:Create('Frame', {
 				BackgroundColor3 = Library.AccentColor;
 				BorderSizePixel = 0;
 				Size = UDim2.new(1, 0, 0, 1);
 				ZIndex = 5;
-				Parent = BoxOuter;
+				Parent = BoxInner;
 			});
 
 			Library:AddToRegistry(Highlight, {
@@ -4104,34 +4115,46 @@ function Library:CreateWindow(...)
 				Tabs = {};
 			};
 
-			local BoxOuter = Library:Create('Frame', {
-				BackgroundColor3 = Library.BackgroundColor;
+			-- 3D inset: dark shadow (bottom-right), light highlight (top-left)
+			local BoxShadow = Library:Create('Frame', {
+				BackgroundColor3 = Color3.fromRGB(8, 8, 8);
 				BorderSizePixel = 0;
 				Size = UDim2.new(1, 0, 0, 0);
 				ZIndex = 2;
 				Parent = Info.Side == 1 and LeftSide or RightSide;
 			});
 
-			Library:Create('UIStroke', {
-				Color = Library.OutlineColor;
-				Thickness = 1;
-				LineJoinMode = Enum.LineJoinMode.Miter;
-				Parent = BoxOuter;
+			local BoxHighlight = Library:Create('Frame', {
+				BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+				BorderSizePixel = 0;
+				Position = UDim2.new(0, 0, 0, 0);
+				Size = UDim2.new(1, -1, 1, -1);
+				ZIndex = 3;
+				Parent = BoxShadow;
 			});
 
-			Library:AddToRegistry(BoxOuter, {
+			local BoxOuter = BoxShadow; -- alias for Remove
+
+			local BoxInner = Library:Create('Frame', {
+				BackgroundColor3 = Library.BackgroundColor;
+				BorderSizePixel = 0;
+				Position = UDim2.new(0, 1, 0, 1);
+				Size = UDim2.new(1, -2, 1, -2);
+				ZIndex = 4;
+				Parent = BoxHighlight;
+			});
+
+			Library:AddToRegistry(BoxInner, {
 				BackgroundColor3 = 'BackgroundColor';
 			});
 
-			local BoxInner = BoxOuter;
-
-			-- 1px accent line at top only
+			-- 1px accent line at top
 			local Highlight = Library:Create('Frame', {
 				BackgroundColor3 = Library.AccentColor;
 				BorderSizePixel = 0;
 				Size = UDim2.new(1, 0, 0, 1);
 				ZIndex = 10;
-				Parent = BoxOuter;
+				Parent = BoxInner;
 			});
 
 			Library:AddToRegistry(Highlight, {
@@ -4171,10 +4194,10 @@ function Library:CreateWindow(...)
 					Parent = TabboxButtons;
 				});
 
-				local ButtonUnderline = Library:Create('Frame', {
+				local ButtonTopLine = Library:Create('Frame', {
 					BackgroundColor3 = Library.AccentColor;
 					BorderSizePixel = 0;
-					Position = UDim2.new(0, 0, 1, -2);
+					Position = UDim2.new(0, 0, 0, 0);
 					Size = UDim2.new(1, 0, 0, 2);
 					Visible = false;
 					ZIndex = 8;
@@ -4184,7 +4207,7 @@ function Library:CreateWindow(...)
 				Library:AddToRegistry(Button, {
 					BackgroundColor3 = 'MainColor';
 				});
-				Library:AddToRegistry(ButtonUnderline, {
+				Library:AddToRegistry(ButtonTopLine, {
 					BackgroundColor3 = 'AccentColor';
 				});
 
@@ -4233,7 +4256,7 @@ function Library:CreateWindow(...)
 
 					Container.Visible = true;
 					Block.Visible = true;
-					ButtonUnderline.Visible = true;
+					ButtonTopLine.Visible = true;
 
 					Button.BackgroundColor3 = Library.BackgroundColor;
 					Library.RegistryMap[Button].Properties.BackgroundColor3 = 'BackgroundColor';
@@ -4244,7 +4267,7 @@ function Library:CreateWindow(...)
 				function TabInstance:Hide()
 					Container.Visible = false;
 					Block.Visible = false;
-					ButtonUnderline.Visible = false;
+					ButtonTopLine.Visible = false;
 
 					Button.BackgroundColor3 = Library.MainColor;
 					Library.RegistryMap[Button].Properties.BackgroundColor3 = 'MainColor';
