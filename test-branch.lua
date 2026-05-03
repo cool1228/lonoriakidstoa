@@ -1,3 +1,319 @@
+
+Claude finished the response
+You said: ok so ou see my tabs they dont look nothing alike like my example in this iage need updated
+image (1).png
+
+if (Library and Library.ScreenGui) then getgenv().Library = Library.ScreenGui:Destroy(); end; local InputService = game:GetService('UserInputService'); local TextService = game:GetService('TextService'); local CoreGui = gethui and gethui() or cloneref(game:GetService('CoreGui')); local Tea
+
+pasted
+
+ok so ou see my tabs they dont look nothing alike like my example in this iage  need updated
+
+8:51 AM
+Claude responded: Looking at the image, the tabs in that UI have a specific style - they're more compact, use a monospace/code font, and have a particular dark theme aesthetic.
+Looking at the image, the tabs in that UI have a specific style - they're more compact, use a monospace/code font, and have a particular dark theme aesthetic. Looking at your library code, I can see the tab styling.
+
+Let me check what specifically differs and update the tab rendering code.
+
+The key differences I see in the image:
+
+Tabs appear more flat/minimal with subtle borders
+The active tab has an accent top line and blends into the content area
+Font appears to be a pixel/code style
+Tighter spacing overall
+Could you clarify what specific aspects you want to match? For example:
+
+You said: Q: What specifically do you want to match from the image?
+Q: What specifically do you want to match from the image?
+A: the tabs are mis placed bad and dont look 3d like you get me
+
+Q: Do you want me to modify the Lua library code directly?
+A: Yes, update the Lua library code
+
+8:52 AM
+Claude responded: Looking at the image, the tabs sit flush against the content box with a 3D inset effect.
+Looking at the image, the tabs sit flush against the content box with a 3D inset effect. Let me find and update the tab-related code.
+
+
+Reading the full library to find tab creation code
+Reading the full library to find tab creation code
+The code is in the document. Let me analyze the tab styling carefully and produce the updated section. In the image I can see:
+
+Tabs are flush/touching the content box below them — no gap
+Active tab has a top accent line and its bottom border disappears into the content box (3D lifted look)
+Inactive tabs look sunken/darker
+The tab row itself sits right on top of the content frame with no padding gap
+
+Updated library with fixed 3D tab styling
+Updated library with fixed 3D tab styling
+Now let me produce the clean, ready-to-paste full patched section directly applied to your code:
+
+
+Extract relevant sections and produce clean patch
+Extract relevant sections and produce clean patch
+Here's exactly what you need to change — 3 spots in your library:
+
+CHANGE 1 — TabArea size (inside CreateWindow, find the TabArea creation):
+
+lua
+-- BEFORE:
+local TabArea = Library:Create('Frame', {
+    BackgroundTransparency = 1;
+    Position = UDim2.new(0, 8, 0, 8);
+    Size = UDim2.new(1, -16, 0, 21);
+    ZIndex = 1;
+    Parent = MainSectionInner;
+});
+
+-- AFTER:
+local TabArea = Library:Create('Frame', {
+    BackgroundTransparency = 1;
+    Position = UDim2.new(0, 8, 0, 8);
+    Size = UDim2.new(1, -16, 0, 20);
+    ZIndex = 4;   -- must be above TabContainer so blocker renders on top
+    Parent = MainSectionInner;
+});
+CHANGE 2 — TabContainer position, moved up 2px so tabs sit flush on its top border:
+
+lua
+-- BEFORE:
+local TabContainer = Library:Create('Frame', {
+    ...
+    Position = UDim2.new(0, 8, 0, 30);
+    Size = UDim2.new(1, -16, 1, -38);
+    ZIndex = 2;
+    ...
+
+-- AFTER:
+local TabContainer = Library:Create('Frame', {
+    ...
+    Position = UDim2.new(0, 8, 0, 28);
+    Size = UDim2.new(1, -16, 1, -36);
+    ZIndex = 2;
+    ...
+CHANGE 3 — Replace the entire function Window:AddTab(Name) body. Find the line function Window:AddTab(Name) and replace everything up to (but not including) function Window:SetWindowTitle) with this:
+
+lua
+function Window:AddTab(Name)
+    local Tab = {
+        Groupboxes = {};
+        Tabboxes = {};
+    };
+
+    local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
+
+    local TabButton = Library:Create('Frame', {
+        BackgroundColor3 = Library.BackgroundColor;
+        BorderSizePixel = 0;
+        Size = UDim2.new(0, TabButtonWidth + 12, 0, 20);
+        ZIndex = 3;
+        Parent = TabArea;
+    });
+
+    Library:AddToRegistry(TabButton, {
+        BackgroundColor3 = 'BackgroundColor';
+    });
+
+    -- Left/top dark edge = sunken shadow on inactive tab
+    local TabShadowLeft = Library:Create('Frame', {
+        BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+        BorderSizePixel = 0;
+        Position = UDim2.new(0, 0, 0, 0);
+        Size = UDim2.new(0, 1, 1, 0);
+        ZIndex = 4;
+        Parent = TabButton;
+    });
+
+    local TabShadowTop = Library:Create('Frame', {
+        BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+        BorderSizePixel = 0;
+        Position = UDim2.new(0, 0, 0, 0);
+        Size = UDim2.new(1, 0, 0, 1);
+        ZIndex = 4;
+        Parent = TabButton;
+    });
+
+    -- Right lighter edge
+    local TabHighlightRight = Library:Create('Frame', {
+        BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+        BorderSizePixel = 0;
+        Position = UDim2.new(1, -1, 0, 0);
+        Size = UDim2.new(0, 1, 1, 0);
+        ZIndex = 4;
+        Parent = TabButton;
+    });
+
+    -- Accent top line, only shown when active
+    local TabTopLine = Library:Create('Frame', {
+        BackgroundColor3 = Library.AccentColor;
+        BorderSizePixel = 0;
+        Position = UDim2.new(0, 0, 0, 0);
+        Size = UDim2.new(1, 0, 0, 2);
+        Visible = false;
+        ZIndex = 6;
+        Parent = TabButton;
+    });
+
+    Library:AddToRegistry(TabTopLine, {
+        BackgroundColor3 = 'AccentColor';
+    });
+
+    local TabButtonLabel = Library:CreateLabel({
+        Position = UDim2.new(0, 0, 0, 2);
+        Size = UDim2.new(1, 0, 1, -2);
+        Text = Name;
+        ZIndex = 5;
+        Parent = TabButton;
+    });
+
+    -- Covers the top border of TabContainer when this tab is active
+    -- making the tab and content box appear as one connected surface
+    local Blocker = Library:Create('Frame', {
+        BackgroundColor3 = Library.MainColor;
+        BorderSizePixel = 0;
+        Position = UDim2.new(0, 0, 1, 0);
+        Size = UDim2.new(1, 0, 0, 2);
+        BackgroundTransparency = 1;
+        ZIndex = 10;
+        Parent = TabButton;
+    });
+
+    Library:AddToRegistry(Blocker, {
+        BackgroundColor3 = 'MainColor';
+    });
+
+    local TabFrame = Library:Create('Frame', {
+        Name = 'TabFrame';
+        BackgroundTransparency = 1;
+        Position = UDim2.new(0, 0, 0, 0);
+        Size = UDim2.new(1, 0, 1, 0);
+        Visible = false;
+        ZIndex = 2;
+        Parent = TabContainer;
+    });
+
+    local LeftSide = Library:Create('ScrollingFrame', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Position = UDim2.new(0, 8 - 1, 0, 8 - 1);
+        Size = UDim2.new(0.5, -12 + 2, 0, Library.UISize.Height.Offset - 91);
+        CanvasSize = UDim2.new(0, 0, 0, 0);
+        BottomImage = '';
+        TopImage = '';
+        ScrollBarThickness = 0;
+        ZIndex = 2;
+        Parent = TabFrame;
+    });
+
+    local RightSide = Library:Create('ScrollingFrame', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Position = UDim2.new(0.5, 4 + 1, 0, 8 - 1);
+        Size = UDim2.new(0.5, -12 + 2, 0, Library.UISize.Height.Offset - 91);
+        CanvasSize = UDim2.new(0, 0, 0, 0);
+        BottomImage = '';
+        TopImage = '';
+        ScrollBarThickness = 0;
+        ZIndex = 2;
+        Parent = TabFrame;
+    });
+
+    Library:Create('UIListLayout', {
+        Padding = UDim.new(0, 8);
+        FillDirection = Enum.FillDirection.Vertical;
+        SortOrder = Enum.SortOrder.LayoutOrder;
+        HorizontalAlignment = Enum.HorizontalAlignment.Center;
+        Parent = LeftSide;
+    });
+
+    Library:Create('UIListLayout', {
+        Padding = UDim.new(0, 8);
+        FillDirection = Enum.FillDirection.Vertical;
+        SortOrder = Enum.SortOrder.LayoutOrder;
+        HorizontalAlignment = Enum.HorizontalAlignment.Center;
+        Parent = RightSide;
+    });
+
+    for _, Side in next, { LeftSide, RightSide } do
+        Side:WaitForChild('UIListLayout'):GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
+            Side.CanvasSize = UDim2.fromOffset(0, Side.UIListLayout.AbsoluteContentSize.Y);
+        end);
+    end;
+
+    function Tab:ShowTab()
+        for _, Tab in next, Window.Tabs do
+            Tab:HideTab();
+        end;
+
+        Blocker.BackgroundTransparency = 0;
+        TabButton.BackgroundColor3 = Library.MainColor;
+        Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
+        TabTopLine.Visible = true;
+        TabFrame.Visible = true;
+
+        -- Flip edges: active tab looks raised
+        TabShadowLeft.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+        TabShadowTop.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+        TabHighlightRight.BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+    end;
+
+    function Tab:HideTab()
+        Blocker.BackgroundTransparency = 1;
+        TabButton.BackgroundColor3 = Library.BackgroundColor;
+        Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
+        TabTopLine.Visible = false;
+        TabFrame.Visible = false;
+
+        -- Inactive: sunken shadow
+        TabShadowLeft.BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+        TabShadowTop.BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+        TabHighlightRight.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+    end;
+
+    function Tab:SetLayoutOrder(Position)
+        TabButton.LayoutOrder = Position;
+        TabListLayout:ApplyLayout();
+    end;
+
+    -- Keep ALL your existing AddGroupbox / AddTabbox / AddLeftGroupbox etc. code here unchanged
+
+    TabButton.InputBegan:Connect(function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+            Tab:ShowTab();
+        end;
+    end);
+
+    if #TabContainer:GetChildren() == 1 then
+        Tab:ShowTab();
+    end;
+
+    Window.Tabs[Name] = Tab;
+    return Tab;
+end;
+Summary of what this fixes:
+
+Tabs now have proper 3D edge shading — dark shadow on top/left when inactive (sunken), flipped when active (raised)
+The Blocker frame covers the border between the active tab and the content box, making them visually fused together
+ZIndex = 4 on TabArea ensures the blocker renders above the TabContainer border
+TabContainer moved up 2px so tabs sit directly on it with no gap
+You said: cant u like just edit my file and send fast?
+cant u like just edit my file and send fast?
+
+8:57 AM
+Claude responded: The Lua file was in the document context.
+
+Check uploads
+Check uploads
+The Lua file was in the document context. Let me write the full edited file now:
+
+
+Write the full patched library file
+Write the full patched library file
+
+Write the full patched library file
+bash
+
+cat > /home/claude/library_patched.lua << 'ENDOFFILE'
 if (Library and Library.ScreenGui) then
 	getgenv().Library = Library.ScreenGui:Destroy();	
 end;
@@ -3672,11 +3988,12 @@ function Library:CreateWindow(...)
 		BackgroundColor3 = 'BackgroundColor';
 	});
 
+	-- Tab button row: ZIndex=4 so Blocker can overdraw TabContainer border
 	local TabArea = Library:Create('Frame', {
 		BackgroundTransparency = 1;
 		Position = UDim2.new(0, 8, 0, 8);
-		Size = UDim2.new(1, -16, 0, 21);
-		ZIndex = 1;
+		Size = UDim2.new(1, -16, 0, 20);
+		ZIndex = 4;
 		Parent = MainSectionInner;
 	});
 
@@ -3687,11 +4004,12 @@ function Library:CreateWindow(...)
 		Parent = TabArea;
 	});
 
+	-- Moved up 2px and size adjusted so tabs sit flush on its top border
 	local TabContainer = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
 		BorderColor3 = Library.OutlineColor;
-		Position = UDim2.new(0, 8, 0, 30);
-		Size = UDim2.new(1, -16, 1, -38);
+		Position = UDim2.new(0, 8, 0, 28);
+		Size = UDim2.new(1, -16, 1, -36);
 		ZIndex = 2;
 		Parent = MainSectionInner;
 	});
@@ -3713,11 +4031,12 @@ function Library:CreateWindow(...)
 
 		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
 
+		-- Tab button, sized to text, 20px tall, no border (we draw manually)
 		local TabButton = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
 			BorderSizePixel = 0;
-			Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
-			ZIndex = 1;
+			Size = UDim2.new(0, TabButtonWidth + 12, 0, 20);
+			ZIndex = 3;
 			Parent = TabArea;
 		});
 
@@ -3725,13 +4044,44 @@ function Library:CreateWindow(...)
 			BackgroundColor3 = 'BackgroundColor';
 		});
 
+		-- 3D left edge (shadow when inactive, highlight when active)
+		local TabShadowLeft = Library:Create('Frame', {
+			BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+			BorderSizePixel = 0;
+			Position = UDim2.new(0, 0, 0, 0);
+			Size = UDim2.new(0, 1, 1, 0);
+			ZIndex = 4;
+			Parent = TabButton;
+		});
+
+		-- 3D top edge
+		local TabShadowTop = Library:Create('Frame', {
+			BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+			BorderSizePixel = 0;
+			Position = UDim2.new(0, 0, 0, 0);
+			Size = UDim2.new(1, 0, 0, 1);
+			ZIndex = 4;
+			Parent = TabButton;
+		});
+
+		-- 3D right edge (lighter)
+		local TabHighlightRight = Library:Create('Frame', {
+			BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+			BorderSizePixel = 0;
+			Position = UDim2.new(1, -1, 0, 0);
+			Size = UDim2.new(0, 1, 1, 0);
+			ZIndex = 4;
+			Parent = TabButton;
+		});
+
+		-- Accent top line, only shown on active tab
 		local TabTopLine = Library:Create('Frame', {
 			BackgroundColor3 = Library.AccentColor;
 			BorderSizePixel = 0;
 			Position = UDim2.new(0, 0, 0, 0);
 			Size = UDim2.new(1, 0, 0, 2);
 			Visible = false;
-			ZIndex = 3;
+			ZIndex = 6;
 			Parent = TabButton;
 		});
 
@@ -3740,20 +4090,21 @@ function Library:CreateWindow(...)
 		});
 
 		local TabButtonLabel = Library:CreateLabel({
-			Position = UDim2.new(0, 0, 0, 0);
-			Size = UDim2.new(1, 0, 1, 0);
+			Position = UDim2.new(0, 0, 0, 2);
+			Size = UDim2.new(1, 0, 1, -2);
 			Text = Name;
-			ZIndex = 2;
+			ZIndex = 5;
 			Parent = TabButton;
 		});
 
+		-- Covers top border of TabContainer when active — fuses tab + content visually
 		local Blocker = Library:Create('Frame', {
 			BackgroundColor3 = Library.MainColor;
 			BorderSizePixel = 0;
 			Position = UDim2.new(0, 0, 1, 0);
-			Size = UDim2.new(1, 0, 0, 1);
+			Size = UDim2.new(1, 0, 0, 2);
 			BackgroundTransparency = 1;
-			ZIndex = 3;
+			ZIndex = 10;
 			Parent = TabButton;
 		});
 
@@ -3762,7 +4113,7 @@ function Library:CreateWindow(...)
 		});
 
 		local TabFrame = Library:Create('Frame', {
-			Name = 'TabFrame',
+			Name = 'TabFrame';
 			BackgroundTransparency = 1;
 			Position = UDim2.new(0, 0, 0, 0);
 			Size = UDim2.new(1, 0, 1, 0);
@@ -3829,6 +4180,11 @@ function Library:CreateWindow(...)
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
 			TabTopLine.Visible = true;
 			TabFrame.Visible = true;
+
+			-- Active: raised look — flip edges
+			TabShadowLeft.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+			TabShadowTop.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
+			TabHighlightRight.BackgroundColor3 = Color3.fromRGB(8, 8, 8);
 		end;
 
 		function Tab:HideTab()
@@ -3837,6 +4193,11 @@ function Library:CreateWindow(...)
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
 			TabTopLine.Visible = false;
 			TabFrame.Visible = false;
+
+			-- Inactive: sunken look
+			TabShadowLeft.BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+			TabShadowTop.BackgroundColor3 = Color3.fromRGB(8, 8, 8);
+			TabHighlightRight.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
 		end;
 
 		function Tab:SetLayoutOrder(Position)
@@ -3847,7 +4208,6 @@ function Library:CreateWindow(...)
 		function Tab:AddGroupbox(Info)
 			local Groupbox = {};
 
-			-- 3D inset border: dark shadow frame (bottom-right) + lighter highlight frame (top-left)
 			local BoxShadow = Library:Create('Frame', {
 				BackgroundColor3 = Color3.fromRGB(8, 8, 8);
 				BorderSizePixel = 0;
@@ -3880,7 +4240,6 @@ function Library:CreateWindow(...)
 				BackgroundColor3 = 'BackgroundColor';
 			});
 
-			-- 1px accent line at the very top
 			local Highlight = Library:Create('Frame', {
 				BackgroundColor3 = Library.AccentColor;
 				BorderSizePixel = 0;
@@ -3960,7 +4319,6 @@ function Library:CreateWindow(...)
 				Tabs = {};
 			};
 
-			-- 3D inset border: dark shadow (bottom-right), lighter highlight (top-left)
 			local BoxShadow = Library:Create('Frame', {
 				BackgroundColor3 = Color3.fromRGB(8, 8, 8);
 				BorderSizePixel = 0;
@@ -3993,7 +4351,6 @@ function Library:CreateWindow(...)
 				BackgroundColor3 = 'BackgroundColor';
 			});
 
-			-- 1px accent line at top
 			local Highlight = Library:Create('Frame', {
 				BackgroundColor3 = Library.AccentColor;
 				BorderSizePixel = 0;
