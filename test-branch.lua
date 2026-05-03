@@ -3675,7 +3675,7 @@ function Library:CreateWindow(...)
 	local TabArea = Library:Create('Frame', {
     BackgroundTransparency = 1;
     Position = UDim2.new(0, 8, 0, 8);
-    Size = UDim2.new(1, -16, 0, 24);
+    Size = UDim2.new(1, -16, 0, 18);
     ZIndex = 1;
     Parent = MainSectionInner;
 });
@@ -3690,8 +3690,8 @@ function Library:CreateWindow(...)
 	local TabContainer = Library:Create('Frame', {
     BackgroundColor3 = Library.MainColor;
     BorderColor3 = Library.OutlineColor;
-    Position = UDim2.new(0, 8, 0, 33);
-    Size = UDim2.new(1, -16, 1, -41);
+    Position = UDim2.new(0, 8, 0, 27);
+    Size = UDim2.new(1, -16, 1, -35);
     ZIndex = 2;
     Parent = MainSectionInner;
 });
@@ -3713,12 +3713,12 @@ function Library:CreateWindow(...)
 		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 13);
 
 		local TabShadow = Library:Create('Frame', {
-			BackgroundColor3 = Color3.fromRGB(0, 0, 0);
-			BorderSizePixel = 0;
-			Size = UDim2.new(0, TabButtonWidth + 6, 1, 0);
-			ZIndex = 1;
-			Parent = TabArea;
-		});
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0);
+    BorderSizePixel = 0;
+    Size = UDim2.new(0, TabButtonWidth + 14, 1, 0);
+    ZIndex = 1;
+    Parent = TabArea;
+});
 
 		local TabButton = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
@@ -3748,10 +3748,10 @@ function Library:CreateWindow(...)
 		});
 
 		local TabButtonLabel = Library:CreateLabel({
-    Position = UDim2.new(0, 0, 0, 0);
-    Size = UDim2.new(1, 0, 1, 0);
+    Position = UDim2.new(0, 4, 0, 0);
+    Size = UDim2.new(1, -8, 1, 0);
     Text = Name;
-    TextSize = 13;
+    TextSize = 12;
     Font = Library.Font;
     ZIndex = 2;
     Parent = TabButton;
