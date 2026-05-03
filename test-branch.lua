@@ -3713,13 +3713,22 @@ function Library:CreateWindow(...)
 
 		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 13);
 
+		local TabShadow = Library:Create('Frame', {
+			BackgroundColor3 = Color3.fromRGB(0, 0, 0);
+			BorderSizePixel = 0;
+			Size = UDim2.new(0, TabButtonWidth + 6, 1, 0);
+			ZIndex = 1;
+			Parent = TabArea;
+		});
+
 		local TabButton = Library:Create('Frame', {
-    BackgroundColor3 = Library.BackgroundColor;
-    BorderSizePixel = 0;
-    Size = UDim2.new(0, TabButtonWidth + 4, 1, 0);
-    ZIndex = 1;
-    Parent = TabArea;
-});
+			BackgroundColor3 = Library.BackgroundColor;
+			BorderSizePixel = 0;
+			Position = UDim2.new(0, 0, 0, 0);
+			Size = UDim2.new(1, -1, 1, -1);
+			ZIndex = 2;
+			Parent = TabShadow;
+		});
 
 		Library:AddToRegistry(TabButton, {
 			BackgroundColor3 = 'BackgroundColor';
@@ -4187,7 +4196,7 @@ function Library:CreateWindow(...)
 		function Tab:Remove()
 			table.clear(Tab);
 			TabFrame:Destroy();
-			TabButton:Destroy();
+			TabShadow:Destroy();
 			Window.Tabs[Name] = nil;
 		end;
 
