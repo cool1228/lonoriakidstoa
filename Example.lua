@@ -1,9 +1,9 @@
--- New example script written by wally
--- You can suggest changes with a pull request or something
+local repo = 'https://raw.githubusercontent.com/cool1228/lonoriakidstoa/main/'
 
-local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+-- Load main library
+local Library = loadstring(game:HttpGet(repo .. 'test-branch.lua'))()
 
-local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+-- Load addons (these MUST exist in /addons/)
 local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
 
